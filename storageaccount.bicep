@@ -1,14 +1,18 @@
-param pStoAccName string
-param plocation string = resourceGroup().location
+// Parameters
+param projectName string = 'devopstest'
+param StoAccName string = '${projectName}sa'
+param location string = resourceGroup().location
+param skuName string = 'Standard_LRS'
+param SAkind string = 'StorageV2'
 
 resource stoacc 'Microsoft.Storage/storageAccounts@2023-05-01' = {
-  name: pStoAccName
-  location: plocation
+  name: StoAccName
+  location: location
   sku: {
-    name: 'Standard_LRS'
+    name: skuName
   }
-  kind: 'StorageV2'
+  kind: SAkind
 }
 
-output StoAccId string = stoacc.id
-
+// Outputs
+output StoAccID string = stoacc.id

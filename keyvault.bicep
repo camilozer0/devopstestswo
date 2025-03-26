@@ -3,7 +3,6 @@ param location string = resourceGroup().location
 param projectName string = 'devopstest'
 param keyVaultName string = '${projectName}kv'
 param tenantID string = '257b7186-8eb0-40e4-afec-99211ef451ee'
-param objectID string = 'sys.guid(tenantID)'
 
 // Variables
 var keyVaultSku = 'standard'
@@ -20,24 +19,13 @@ resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
     accessPolicies: [
       {
         tenantId: tenantID
-        objectId: objectID
+        objectId: sys.guid(tenantID)
         permissions: {
           keys: [
-            'get'
-            'list'
-            'create'
-            'delete'
-            'import'
-            'update'
-            'backup'
-
+            'all'
           ]
           secrets: [
-            'list'
-            'get'
-            'set'
-            'delete'
-            'recover'
+            'all'
           ]
         }
       }

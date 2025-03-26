@@ -1,0 +1,77 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  resourceGroupName: 'DevOpsTest'
+  location1: 'southcentralus'
+  keyVaultName: 'devopstestkvpl'
+  secretName: 'constrsecretpl'
+  serviceBusName: 'devopstestsbnspl'
+  storageAccountName: 'devopstestonesapl'
+
+steps:
+- task: AzureCLI@2
+  displayName: 'Crear Key Vault'
+  inputs:
+    azureSubscription: 'nombre-de-tu-conexion-azure-service-principal'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az keyvault create --name $(keyVaultName) --location $(location)
+    failOnStderr: true
+
+- task: AzureCLI@2
+  displayName: 'Crear Service Bus'
+  inputs:
+    azureSubscription: 'nombre-de-tu-conexion-azure-service-principal'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az servicebus namespace create --name $(serviceBusName) --location $(location)
+    failOnStderr: true
+
+- task: AzureCLI@2
+  displayName: 'Crear Storage Account'
+  inputs:
+    azureSubscription: 'nombre-de-tu-conexion-azure-service-principal'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az storage account create --name $(storageAccountName) --location $(location) --sku Standard_LRS
+    failOnStderr: true
+
+- task: PowerShell@2
+  displayName: 'Guardar secretos en Key Vault'
+  inputs:
+    script: storekeyvault.ps1
+    args: [
+      '--keyvaultName', $(keyVaultName),
+      '--secretName', $(secretName),
+      '--serviceBusConnectionString', 'Endpoint=sb://$(serviceBusName).servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=myServiceBusKey',
+      '--storageConnectionString', 'DefaultEndpointsProtocol=https;AccountName=$(storageAccountName);AccountKey=myStorageKey;EndpointSuffix=core.windows.net'
+    ]
+    failOnStderr: true
+
+- task: AzureCLI@2
+  displayName: 'Desplegar recursos'
+  inputs:
+    azureSubscription: 'nombre-de-tu-conexion-azure-service-principal' # Reemplaza con el nombre de tu conexión de servicio de Azure
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az deployment group create \
+        --resource-group 'DevOpsTest' \
+        --template-file 'servicebus.bicep' \
+        --name 'DeployServiceBus-$(Build.BuildId)' \
+        --parameters location='$(location)' \
+        --parameters serviceBusName='$(serviceBusName)'
+      && az deployment group create \
+        --resource-group 'DevOpsTest' \
+        --template-file 'storageaccount.bicep' \
+        --name 'DeployStorageAccount-$(Build.BuildId)' \
+        --parameters location='$(location)' \
+        --parameters storageAccountName='$(storageAccountName)'
+    failOnStderr: true
