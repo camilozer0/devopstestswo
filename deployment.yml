@@ -47,12 +47,12 @@ steps:
   displayName: 'Guardar secretos en Key Vault'
   inputs:
     script: storekeyvault.ps1
-    args: [
-      '--keyvaultName', $(keyVaultName),
-      '--secretName', $(secretName),
-      '--serviceBusConnectionString', 'Endpoint=sb://$(serviceBusName).servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=myServiceBusKey',
-      '--storageConnectionString', 'DefaultEndpointsProtocol=https;AccountName=$(storageAccountName);AccountKey=myStorageKey;EndpointSuffix=core.windows.net'
-    ]
+#    args: [
+#      '--keyvaultName', $(keyVaultName),
+#      '--secretName', $(secretName),
+#      '--serviceBusConnectionString', 'Endpoint=sb://$(serviceBusName).servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=myServiceBusKey',
+#      '--storageConnectionString', 'DefaultEndpointsProtocol=https;AccountName=$(storageAccountName);AccountKey=myStorageKey;EndpointSuffix=core.windows.net'
+#    ]
     failOnStderr: true
 
 - task: AzureCLI@2
