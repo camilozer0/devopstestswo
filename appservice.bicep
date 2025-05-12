@@ -1,6 +1,6 @@
 // Parameters
 param projectName string = 'techskills'
-param location string = 'canadacentral'
+param location string = resourceGroup().location
 param skuName string = 'B1'
 param skuKind string = 'Linux'
 

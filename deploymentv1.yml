@@ -1,0 +1,53 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureCLI@2
+  displayName: "Iniciar sesion en Azure"
+  inputs:
+    azureSubscription: 'CamiloZero'
+    scriptType: 'ps'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az account show
+
+- task: AzureResourceManageTemplateDeployment@3
+  displayName: 'Desplegar el App Service Plan'
+  inputs:
+    deploymentScope: 'Resource group'
+    AzureResourceManagerConnection: 'CamiloZero'
+    subscriptionId: '$(azureSubscriptionId)'
+    resourceGroupName: 'CamiloMazorra'
+    location: 'southcentralus'
+    templateLocation: 'linkedArtifact'
+    csmFile: 'appservice.bicep'
+    overrideParameters: |
+      # puedo pasar parametros que tenga
+
+- task: AzureResourceManageTemplateDeployment@3
+  displayName: 'desplegar App Service'
+  inputs:
+    deploymentScope: 'Resource Group'
+    AzureResourceManagerConnection: 'CamiloZero'
+    subscriptionId: '$(azureSubscriptionId)'
+    resourceGroupName: 'CamiloMazorra'
+    location: 'southcentralus'
+    templateLocation: 'linkedArtifact'
+    csmFile: 'webapp.bicep'
+    overrideParameters: |
+      #appserviceName: 'mi-webapp-$(Build.BuildId)'
+
+- task: AzurePowerShell@2
+  displayName: 'Obtener y crear secretos en KeyVault'
+  inputs:
+    azureSubscription: 'CamiloZero'
+    scriptType: 'FilePath'
+    scriptPath: 'storeconnection.ps1'
+    scriptArguments: |
+      -resourceGroupName 'CamiloMazorra'
+      -storageAccountName 'techsillssa'
+      -keyVaultName 'techskillskv'
+    AzurePowerShellVersion: 'LatestVersion'
