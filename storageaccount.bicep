@@ -1,18 +1,28 @@
 // Parameters
-param projectName string = 'devopstest'
-param StoAccName string = '${projectName}sa'
+param projectName string = 'techskills'
 param location string = resourceGroup().location
 param skuName string = 'Standard_LRS'
 param SAkind string = 'StorageV2'
+//param AccTier string = 'Hot'
 
-resource stoacc 'Microsoft.Storage/storageAccounts@2023-05-01' = {
+// Variables
+var StoAccName = '${projectName}sa'
+
+// Resource
+resource storageAccount 'Microsoft.Storage/storageAccounts@2024-01-01' = {
   name: StoAccName
   location: location
   sku: {
     name: skuName
   }
   kind: SAkind
+  /*
+  properties: {
+    accessTier: AccTier
+  }
+  */
 }
 
 // Outputs
-output StoAccID string = stoacc.id
+output StoAccID string = storageAccount.id
+output StoAccName string = storageAccount.name

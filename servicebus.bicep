@@ -1,13 +1,15 @@
 // Parameters
-param projectName string = 'devopstest'
+param projectName string = 'techskills'
 param location string = resourceGroup().location
 param serviceBusSku string = 'Standard'
 
 // Variables
-var serviceBusNamespaceName ='${projectName}sbns'
+var serviceBusNamespaceName = '${projectName}sbns'
+var queueName = '${projectName}queue_CamiloM'
+var topicName = '${projectName}topic_CamiloM'
 
 // Resources
-resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-06-01-preview' = {
+resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2024-01-01' = {
   name: serviceBusNamespaceName
   location: location
   sku: {
@@ -17,7 +19,18 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-06-01-preview
   }
 }
 
+resource queue 'Microsoft.ServiceBus/namespaces/queues@2024-01-01' = {
+  name: queueName
+  parent: serviceBusNamespace
+}
+
+resource topic 'Microsoft.ServiceBus/namespaces/topics@2024-01-01' = {
+  name: topicName
+  parent: serviceBusNamespace
+}
 
 // Outputs
 output serviceBusNamespaceID string = serviceBusNamespace.id
-
+output servieBusNamespaceName string = serviceBusNamespace.name
+output queueName string = queue.name
+output topicName string = topic.name

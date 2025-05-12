@@ -1,10 +1,10 @@
 // Parameters
+param projectName string = 'techskills'
 param location string = resourceGroup().location
-param projectName string = 'devopstest'
-param keyVaultName string = '${projectName}kv'
-param tenantID string = '257b7186-8eb0-40e4-afec-99211ef451ee'
+param tenantID string = subscription().tenantId
 
 // Variables
+param keyVaultName string = '${projectName}kv'
 var keyVaultSku = 'standard'
 
 // resources
@@ -40,3 +40,4 @@ resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
 // Outputs
 output keyVaultID string = keyVault.id
 output keyVaultUri string = keyVault.properties.vaultUri
+output tenantId string = subscription().tenantId
