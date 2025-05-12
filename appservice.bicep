@@ -1,12 +1,14 @@
 // Parameters
-param projectName string = 'devopstest'
-param appServicePlanName string = '${projectName}as'
+param projectName string = 'techskills'
 param location string = 'canadacentral'
 param skuName string = 'B1'
 param skuKind string = 'Linux'
 
+// Variables
+var appServicePlanName = '${projectName}as'
+
 // Resources
-resource appServicePlan 'Microsoft.Web/serverfarms@2023-01-01' = {
+resource appServicePlan 'Microsoft.Web/serverfarms@2024-04-01' = {
   name: appServicePlanName
   location: location
   kind: skuKind
