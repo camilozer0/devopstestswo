@@ -5,8 +5,8 @@ param serviceBusSku string = 'Standard'
 
 // Variables
 var serviceBusNamespaceName = '${projectName}sbns'
-var queueName = '${projectName}queue_CamiloM'
-var topicName = '${projectName}topic_CamiloM'
+var queueName = '${projectName}queue'
+var topicName = '${projectName}topic'
 
 // Resources
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2024-01-01' = {
