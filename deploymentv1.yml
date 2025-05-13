@@ -6,7 +6,7 @@ pool:
 
 steps:
 - task: AzureCLI@2
-  displayName: "Iniciar sesion en Azure"
+  displayName: "Mostrar cuentas de Azure"
   inputs:
     azureSubscription: 'CamiloZero'
     scriptType: 'ps'
@@ -46,8 +46,4 @@ steps:
     azureSubscription: 'CamiloZero'
     scriptType: 'FilePath'
     scriptPath: 'storeconnection.ps1'
-    scriptArguments: |
-      -resourceGroupName 'CamiloMazorra'
-      -storageAccountName 'techsillssa'
-      -keyVaultName 'techskillskv'
     AzurePowerShellVersion: 'LatestVersion'
